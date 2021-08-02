@@ -15,7 +15,102 @@ pipeline {
  }
   stages {
     
-    
+    stage("Master") {
+      when {
+        branch 'master'
+
+      }
+      steps {
+        echo 'we are in Master branch'
+        
+        
+      }
+
+    }
+    stage("Develop") {
+      when {
+        branch 'develop'
+
+      }
+      steps {
+        echo 'we are in Develop branch'
+      }
+
+    }
+    stage("Test") {
+      when {
+        branch 'test'
+
+      }
+      steps {
+        echo 'we are in test branch'
+
+      }
+
+    }
+   stage('Decrypt a master secret file')
+    {
+      when {
+        branch 'master'
+      }
+      steps{
+        
+        script{
+          sh '''
+               git submodule update --init --recursive
+                
+               cd config/
+               gpg --batch --import $gpg_secret
+               
+                git secret reveal -p $gpg_passphrase
+                '''
+                
+          
+        }
+      }
+    }
+    stage('Decrypt a develop secret file')
+    {
+      when {
+        branch 'develop'
+      }
+      steps{
+        
+        script{
+          sh '''
+               git submodule update --init --recursive
+                
+               cd config/
+               gpg --batch --import $gpg_secret
+               
+                git secret reveal -p $gpg_passphrase
+                '''
+                
+          
+        }
+      }
+    }
+    stage('Decrypt a test secret file')
+    {
+      when{
+      branch 'test'
+      }
+      steps{
+        
+        script{
+          sh '''
+               git submodule update --init --recursive
+                
+               cd config/
+               gpg --batch --import $gpg_secret
+               
+                git secret reveal -p $gpg_passphrase
+                '''
+                
+          
+        }
+      }
+    }
    
  
  stage('Building a image for amazon-associate-etl ') {
